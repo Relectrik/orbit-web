@@ -48,13 +48,19 @@ export default function ChatPage() {
           content: "hey hey! i’m orbit’s lil personality bot. tell me what you’re into + what you’ve been vibin’ with lately. i'd also love to hear your name!",
         });
       }
-      setMessages(msgs);
+      // Avoid clobbering a just-sent first user message if history returns slightly later
+      setMessages((prev) => (prev.length === 0 ? msgs : prev));
     };
     loadHistory();
   }, []);
 
   React.useEffect(() => {
     // Auto-scroll to the bottom when messages change
+    const container = listRef.current;
+    if (container) {
+      // Force scroll in addition to scrollIntoView for cross-browser reliability
+      container.scrollTop = container.scrollHeight;
+    }
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -75,7 +81,14 @@ export default function ChatPage() {
       const data: { messages?: Array<{ role: Message["role"]; content: string }>; error?: string } = await res.json();
       if (!res.ok) throw new Error(data?.error || "Chat error");
       const appended = data?.messages || [];
-      setMessages(appended.map((m) => ({ id: generateId(), role: m.role, content: m.content })));
+      // Prefer the server's full history; if it looks shorter (edge cases), merge without losing prior items
+      setMessages((prev) => {
+        const mapped = appended.map((m) => ({ id: generateId(), role: m.role, content: m.content }));
+        if (mapped.length >= prev.length) return mapped;
+        const seen = new Set(prev.map((p) => `${p.role}|${p.content}`));
+        const delta = mapped.filter((m) => !seen.has(`${m.role}|${m.content}`));
+        return delta.length ? [...prev, ...delta] : prev;
+      });
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -91,7 +104,7 @@ export default function ChatPage() {
       <h1 className="text-2xl font-semibold text-lavender mb-4">Chat</h1>
       <div
         ref={listRef}
-        className="h-[60vh] max-h-[70dvh] glass rounded-2xl p-4 overflow-y-scroll overscroll-contain space-y-3"
+        className="h-[60vh] max-h-[70dvh] glass rounded-2xl p-4 overflow-y-auto overscroll-contain space-y-3"
         style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y" }}
       >
         {messages.map((m) => (

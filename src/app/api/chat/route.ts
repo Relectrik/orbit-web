@@ -56,6 +56,10 @@ function buildSystemPrompt(): string {
   );
 }
 
+// Initial assistant greeting shown at top of a brand-new chat
+const INTRO_MESSAGE =
+  "hey hey! i’m orbit’s lil personality bot. tell me what you’re into + what you’ve been vibin’ with lately. i'd also love to hear your name!";
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get("sessionId");
@@ -95,14 +99,19 @@ export async function POST(req: NextRequest) {
     const existing: ChatMessage[] = (snapshot.exists ? snapshot.data()?.messages : []) || [];
 
     const systemPrompt = buildSystemPrompt();
+    const baseHistory: ChatMessage[] =
+      existing.length === 0
+        ? [{ role: "assistant", content: INTRO_MESSAGE }]
+        : existing;
+
     const messagesForProvider = [
       { role: "system", content: systemPrompt },
-      ...existing.map((m) => ({ role: m.role, content: m.content })),
+      ...baseHistory.map((m) => ({ role: m.role, content: m.content })),
       { role: "user", content: userText },
     ];
 
     // Persist user message immediately so Firestore always reflects activity
-    const afterUser: ChatMessage[] = [...existing, { role: "user", content: userText }];
+    const afterUser: ChatMessage[] = [...baseHistory, { role: "user", content: userText }];
     await chatRef.set(
       {
         messages: afterUser,
@@ -175,8 +184,12 @@ export async function POST(req: NextRequest) {
         const chatRef = db.collection("orbit_chats").doc(sessionId);
         const snap = await chatRef.get();
         const existing: ChatMessage[] = (snap.exists ? snap.data()?.messages : []) || [];
+        const seeded: ChatMessage[] =
+          existing.length === 0
+            ? [{ role: "assistant", content: INTRO_MESSAGE }]
+            : existing;
         const nextMessages: ChatMessage[] = [
-          ...existing,
+          ...seeded,
           { role: "assistant", content: "I hit an error reaching the model—please try again shortly." },
         ];
         await chatRef.set(
