@@ -8,7 +8,6 @@ type NavItem = { href: string; label: string };
 const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/chat", label: "Chat" },
-  { href: "/about", label: "About" },
 ];
 
 export function Nav() {
