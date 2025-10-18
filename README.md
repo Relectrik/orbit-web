@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Orbit Website – Next.js
+=======================
 
-## Getting Started
+Separate marketing/onboarding website for Orbit (simulation-based connections). Built with Next.js App Router, Tailwind v4, and Firebase Admin for interest capture.
 
-First, run the development server:
+Getting Started
+---------------
+
+1. Install deps:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Configure environment variables. Create an `.env.local` with either a service account JSON or individual fields:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# JSON (preferred)
+FIREBASE_SERVICE_ACCOUNT='{"project_id":"...","client_email":"...","private_key":"-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"}'
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Or individual fields
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_CLIENT_EMAIL=service-account@your-project-id.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n'
+```
 
-## Learn More
+3. Run the dev server:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Open `http://localhost:3000`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Features
+--------
 
-## Deploy on Vercel
+- Home page with email interest form (stored in Firestore collection `orbit_interest`).
+- Chat page scaffold for previewing the chatbot UI (logic TBD).
+- Shared UI components for consistent styling.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+OpenRouter Setup
+----------------
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Add to `.env.local`:
+
+```bash
+OPENROUTER_API_KEY=sk-or-...
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_NAME=Orbit
+```
+
+API route: `POST /api/chat` with `{ sessionId, message }`. It stores conversation in Firestore collection `orbit_chats` and streams replies via OpenRouter request (non-streaming response currently).
+
+Project Structure
+-----------------
+
+- `src/app/page.tsx`: Home with interest form
+- `src/app/chat/page.tsx`: Chat UI placeholder
+- `src/app/api/interest/route.ts`: API route to store emails
+- `src/lib/firebaseAdmin.ts`: Admin SDK init
+- `src/components/InterestForm.tsx`: Form UI
