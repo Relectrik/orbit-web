@@ -10,11 +10,21 @@ type ChatMessage = {
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
 
+function sanitize(text: string): string {
+  // remove emojis (basic range, not exhaustive) and markdown emphasis symbols
+  const withoutEmojis = text.replace(/[\u{1F300}-\u{1FAFF}\u{1F900}-\u{1F9FF}\u{2600}-\u{27BF}]/gu, "");
+  const withoutMarkdown = withoutEmojis.replace(/[\*\_\~\`]/g, "");
+  const collapsed = withoutMarkdown.replace(/\s+/g, " ").trim();
+  // keep it short-ish
+  const truncated = collapsed.slice(0, 280);
+  return truncated.toLowerCase();
+}
+
 function buildSystemPrompt(): string {
   return (
-    "You are Orbit's onboarding personality model. Your job is to quickly understand the user's interests, hobbies, preferences, and deeper aspirations. " +
-    "Ask concise, empathetic, and varied questions. Reflect briefly on what they've said, then move forward. Avoid generic advice; focus on high-signal discovery. " +
-    "Prefer one focused question per response. Maintain a premium, warm tone."
+    "you are orbit's vibe-y onboarding model. keep replies short, lowercase, playful, and personal—like gen z texting. " +
+    "ask one focused question at a time to learn hobbies, interests, lifestyle, and deeper goals. " +
+    "reflect lightly (1 short line max), then ask the next q. avoid generic advice. be kind, curious, and a little cute."
   );
 }
 
@@ -28,12 +38,13 @@ export async function GET(req: NextRequest) {
     const doc = await db.collection("orbit_chats").doc(sessionId).get();
     const data = doc.exists ? doc.data() : { messages: [] };
     return NextResponse.json({ messages: data?.messages || [] });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const err = e as { code?: number | string; message?: string };
     // Firestore not fully initialized or database missing returns NOT_FOUND (code 5)
-    if (e?.code === 5) {
+    if (err?.code === 5) {
       return NextResponse.json({ messages: [] });
     }
-    return NextResponse.json({ error: e?.message || "Server error" }, { status: 500 });
+    return NextResponse.json({ error: err?.message || "Server error" }, { status: 500 });
   }
 }
 
@@ -94,10 +105,11 @@ export async function POST(req: NextRequest) {
     }
 
     const json = await providerRes.json();
-    const reply: string =
+    const rawReply: string =
       json?.choices?.[0]?.message?.content?.[0]?.text ||
       json?.choices?.[0]?.message?.content ||
       "";
+    const reply = sanitize(rawReply);
     if (!reply) {
       return NextResponse.json({ error: "No reply from model" }, { status: 502 });
     }
@@ -113,11 +125,12 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({ reply, messages: nextMessages });
-  } catch (e: any) {
+  } catch (e: unknown) {
     try {
       // Append a graceful assistant error so history still reflects the attempt
       const url = new URL(req.url);
-      const sessionId = (await req.json().catch(() => null))?.sessionId || url.searchParams.get("sessionId") || "";
+      const maybeBody = await req.json().catch(() => null) as { sessionId?: string } | null;
+      const sessionId = maybeBody?.sessionId || url.searchParams.get("sessionId") || "";
       if (sessionId) {
         const chatRef = db.collection("orbit_chats").doc(sessionId);
         const snap = await chatRef.get();
@@ -132,7 +145,8 @@ export async function POST(req: NextRequest) {
         );
       }
     } catch {}
-    return NextResponse.json({ error: e?.message || "Server error" }, { status: 500 });
+    const err = e as { message?: string };
+    return NextResponse.json({ error: err?.message || "Server error" }, { status: 500 });
   }
 }
 

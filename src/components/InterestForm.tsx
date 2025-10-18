@@ -24,9 +24,10 @@ export default function InterestForm() {
       setStatus("success");
       setMessage("You're on the list. We’ll reach out soon.");
       setEmail("");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { message?: string } | Error;
       setStatus("error");
-      setMessage(err?.message || "Something went wrong");
+      setMessage((error as Error)?.message || (error as { message?: string })?.message || "Something went wrong");
     }
   }
 

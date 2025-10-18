@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} style={{ fontFamily: 'Helvetica, Arial, ui-sans-serif, system-ui' }}>
         <div className="min-h-dvh">
           <header className="sticky top-0 z-10">
             <div className="glass mx-auto max-w-5xl mt-4 rounded-full px-4 py-3 flex items-center justify-between gap-3">

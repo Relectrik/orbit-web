@@ -24,9 +24,10 @@ export async function POST() {
     });
 
     return NextResponse.json({ ok: true, interestDocId, chatSessionId });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const err = e as { message?: string; code?: number | string };
     return NextResponse.json(
-      { ok: false, error: e?.message || "unknown", code: e?.code },
+      { ok: false, error: err?.message || "unknown", code: err?.code },
       { status: 500 }
     );
   }

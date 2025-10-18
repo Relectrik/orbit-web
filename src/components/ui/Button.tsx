@@ -9,7 +9,7 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 export function Button({ variant = "primary", className = "", ...rest }: ButtonProps) {
   const variantClass =
     variant === "primary"
-      ? "bg-lavender text-black hover:opacity-90"
+      ? "bg-white text-black hover:opacity-90"
       : variant === "secondary"
       ? "glass text-foreground hover:opacity-90"
       : "bg-transparent text-foreground hover:opacity-80";

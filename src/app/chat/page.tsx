@@ -22,24 +22,31 @@ export default function ChatPage() {
   const [input, setInput] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const sessionIdRef = React.useRef<string>("");
+  const listRef = React.useRef<HTMLDivElement | null>(null);
+  const endRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     sessionIdRef.current = getSessionId();
     const loadHistory = async () => {
       const res = await fetch(`/api/chat?sessionId=${sessionIdRef.current}`);
-      const data = await res.json();
-      const msgs = (data?.messages || []).map((m: any, i: number) => ({ id: `h${i}`, role: m.role, content: m.content }));
+      const data: { messages?: Array<{ role: Message["role"]; content: string }> } = await res.json();
+      const msgs = (data?.messages || []).map((m, i) => ({ id: `h${i}`, role: m.role, content: m.content }));
       if (msgs.length === 0) {
         msgs.push({
           id: "intro",
           role: "assistant",
-          content: "Hey, I'm Orbit's personality model. Share your interests and what you’re exploring—I'll tailor questions to learn your style.",
+          content: "hey hey! i’m orbit’s lil personality bot. tell me what you’re into + what you’ve been vibin’ with lately — i’ll ask q’s that match ur energy",
         });
       }
       setMessages(msgs);
     };
     loadHistory();
   }, []);
+
+  React.useEffect(() => {
+    // Auto-scroll to the bottom when messages change
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   async function sendMessage() {
     const text = input.trim();
@@ -55,13 +62,11 @@ export default function ChatPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId: sessionIdRef.current, message: text }),
       });
-      const data = await res.json();
+      const data: { messages?: Array<{ role: Message["role"]; content: string }>; error?: string } = await res.json();
       if (!res.ok) throw new Error(data?.error || "Chat error");
       const appended = data?.messages || [];
-      setMessages(
-        appended.map((m: any) => ({ id: crypto.randomUUID(), role: m.role, content: m.content }))
-      );
-    } catch (e: any) {
+      setMessages(appended.map((m) => ({ id: crypto.randomUUID(), role: m.role, content: m.content })));
+    } catch {
       setMessages((prev) => [
         ...prev,
         { id: crypto.randomUUID(), role: "assistant", content: "I hit an error reaching the model—try again in a moment." },
@@ -74,17 +79,22 @@ export default function ChatPage() {
   return (
     <div className="mx-auto max-w-2xl w-full">
       <h1 className="text-2xl font-semibold text-lavender mb-4">Chat</h1>
-      <div className="h-[60vh] glass rounded-2xl p-4 overflow-y-auto space-y-3">
+      <div
+        ref={listRef}
+        className="h-[60vh] max-h-[70dvh] glass rounded-2xl p-4 overflow-y-scroll overscroll-contain space-y-3"
+        style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y" }}
+      >
         {messages.map((m) => (
           <div
             key={m.id}
-            className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm ${
+            className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm whitespace-pre-wrap break-words ${
               m.role === "user" ? "ml-auto bg-lavender text-black" : "bg-black/30 border border-white/10"
             }`}
           >
             {m.content}
           </div>
         ))}
+        <div ref={endRef} />
       </div>
       <div className="mt-3 flex items-center gap-2">
         <Input
