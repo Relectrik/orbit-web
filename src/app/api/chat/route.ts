@@ -20,11 +20,39 @@ function sanitize(text: string): string {
   return truncated.toLowerCase();
 }
 
+async function extractNameFromConversation(
+  allMessages: ChatMessage[],
+  model: string,
+  headers: Record<string, string>
+): Promise<string> {
+  const sys =
+    "you extract the user's preferred name from this conversation. respond with only the name in lowercase (letters only). if unclear, respond exactly: unknown. no punctuation, no extra words.";
+  const providerRes = await fetch(OPENROUTER_API_URL, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      model,
+      messages: [
+        { role: "system", content: sys },
+        ...allMessages.slice(-12).map((m) => ({ role: m.role, content: m.content })),
+        { role: "user", content: "what is the user's name?" },
+      ],
+    }),
+  });
+  if (!providerRes.ok) return "unknown";
+  const json = await providerRes.json();
+  const raw: string =
+    json?.choices?.[0]?.message?.content?.[0]?.text || json?.choices?.[0]?.message?.content || "";
+  const name = sanitize(raw).replace(/[^a-z]/g, "").trim();
+  if (!name) return "unknown";
+  return name;
+}
+
 function buildSystemPrompt(): string {
   return (
-    "you are orbit's vibe-y onboarding model. keep replies short, lowercase, playful, and personal—like gen z texting. " +
+    "you are orbit's onboarding model. keep replies short, lowercase, and personal. mirror the user's energy, formality, and text length. " +
     "ask one focused question at a time to learn hobbies, interests, lifestyle, and deeper goals. " +
-    "reflect lightly (1 short line max), then ask the next q. avoid generic advice. be kind, curious, and a little cute."
+    "reflect lightly (<=1 short line), then ask the next question. avoid generic advice. no emojis, no markdown styling."
   );
 }
 
@@ -116,10 +144,22 @@ export async function POST(req: NextRequest) {
 
     const nextMessages: ChatMessage[] = [...afterUser, { role: "assistant", content: reply }];
 
+    // Attempt private name extraction if not already stored or still unknown
+    let profileName: string | undefined;
+    try {
+      const existingDoc = await chatRef.get();
+      const existingProfile = existingDoc.exists ? (existingDoc.data() as { profile?: { name?: string } })?.profile : undefined;
+      const currentName = existingProfile?.name;
+      if (!currentName || currentName === "unknown") {
+        profileName = await extractNameFromConversation(nextMessages, model, headers);
+      }
+    } catch {}
+
     await chatRef.set(
       {
         messages: nextMessages,
         updatedAt: new Date().toISOString(),
+        ...(profileName ? { profile: { name: profileName } } : {}),
       },
       { merge: true }
     );

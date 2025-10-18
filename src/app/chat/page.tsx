@@ -6,12 +6,22 @@ import { Input } from "@/components/ui/Input";
 
 type Message = { id: string; role: "user" | "assistant"; content: string };
 
+function generateId(): string {
+  // Use crypto.randomUUID if available, else a simple fallback
+  try {
+    if (typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function") {
+      return (crypto as any).randomUUID();
+    }
+  } catch {}
+  return `id-${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`;
+}
+
 function getSessionId() {
   if (typeof window === "undefined") return "";
   const key = "orbit_chat_session";
   let id = window.localStorage.getItem(key);
   if (!id) {
-    id = crypto.randomUUID();
+    id = generateId();
     window.localStorage.setItem(key, id);
   }
   return id;
@@ -35,7 +45,7 @@ export default function ChatPage() {
         msgs.push({
           id: "intro",
           role: "assistant",
-          content: "hey hey! i’m orbit’s lil personality bot. tell me what you’re into + what you’ve been vibin’ with lately — i’ll ask q’s that match ur energy",
+          content: "hey hey! i’m orbit’s lil personality bot. tell me what you’re into + what you’ve been vibin’ with lately. i'd also love to hear your name!",
         });
       }
       setMessages(msgs);
@@ -52,7 +62,7 @@ export default function ChatPage() {
     const text = input.trim();
     if (!text || loading) return;
     setLoading(true);
-    const optimistic: Message = { id: crypto.randomUUID(), role: "user", content: text };
+    const optimistic: Message = { id: generateId(), role: "user", content: text };
     setMessages((prev) => [...prev, optimistic]);
     setInput("");
 
@@ -65,11 +75,11 @@ export default function ChatPage() {
       const data: { messages?: Array<{ role: Message["role"]; content: string }>; error?: string } = await res.json();
       if (!res.ok) throw new Error(data?.error || "Chat error");
       const appended = data?.messages || [];
-      setMessages(appended.map((m) => ({ id: crypto.randomUUID(), role: m.role, content: m.content })));
+      setMessages(appended.map((m) => ({ id: generateId(), role: m.role, content: m.content })));
     } catch {
       setMessages((prev) => [
         ...prev,
-        { id: crypto.randomUUID(), role: "assistant", content: "I hit an error reaching the model—try again in a moment." },
+        { id: generateId(), role: "assistant", content: "i hit an error reaching the model — try again in a moment." },
       ]);
     } finally {
       setLoading(false);
