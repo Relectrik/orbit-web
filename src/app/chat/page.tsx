@@ -9,9 +9,9 @@ type Message = { id: string; role: "user" | "assistant"; content: string };
 function generateId(): string {
   // Use crypto.randomUUID if available, else a simple fallback
   try {
-    if (typeof crypto !== "undefined" && typeof (crypto as any).randomUUID === "function") {
-      return (crypto as any).randomUUID();
-    }
+    const c = (globalThis as unknown as { crypto?: { randomUUID?: () => string } }).crypto;
+    const uuid = c?.randomUUID;
+    if (typeof uuid === "function") return uuid();
   } catch {}
   return `id-${Math.random().toString(36).slice(2)}-${Date.now().toString(36)}`;
 }
