@@ -14,14 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Orbit – Simulation-based connections",
+  title: "Orbit: The Next Era of Dating",
   description:
-    "Orbit builds digital twins from your interests and chats to recommend dates, friends, and collaborators—no swiping.",
+    "Orbit builds digital twins from your interests and chats to recommend dates-no swiping.",
   metadataBase: new URL("https://orbit.example"),
   openGraph: {
-    title: "Orbit – Simulation-based connections",
+    title: "Orbit: The Next Era of Dating",
     description:
-      "No swiping. AI simulations recommend meaningful matches for dating, friends, and networking.",
+      "Orbit builds digital twins from your interests and chats to recommend dates-no swiping.",
     type: "website",
   },
 };

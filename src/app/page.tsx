@@ -12,7 +12,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-5xl px-6">
           <div className="bg-white border border-foreground/10 shadow-sm rounded-2xl px-4 py-3 text-center">
             <h1 className="text-5xl md:text-7xl font-black tracking-tight text-foreground">Orbit</h1>
-            <p className="text-sm md:text-base text-foreground/80">Meet the right match, without all the small talk.</p>
+            <p className="text-sm md:text-base text-foreground/80">Meet the right match, without the small talk.</p>
           </div>
         </div>
       </section>
@@ -72,7 +72,7 @@ export default function AboutPage() {
 
         {/* Moon button at bottom */}
         <section className="flex flex-col items-center -mb-10">
-          <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-4">Choose your plan, find your match</h2>
+          <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-4">Choose your plan, find your match.</h2>
           <div className="relative">
             {/* Pulsing aura */}
             <div className="absolute inset-0 w-20 h-20 rounded-full bg-foreground/20 animate-ping" />

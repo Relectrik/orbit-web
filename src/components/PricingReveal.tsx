@@ -6,7 +6,7 @@ export default function PricingReveal() {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       {!open && (
         <button
           type="button"
@@ -25,24 +25,25 @@ export default function PricingReveal() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr>
-                <th className="p-3 text-sm font-semibold text-foreground/70">Features</th>
-                <th className="p-3 text-sm font-semibold">Twin+ <span className="text-foreground/60 font-normal">$15</span></th>
-                <th className="p-3 text-sm font-semibold">TwinX <span className="text-foreground/60 font-normal">$25</span></th>
+                <th className="p-6 text-lg font-semibold text-foreground/70">Features</th>
+                <th className="p-6 text-lg font-semibold text-center">Twin+</th>
+                <th className="p-6 text-lg font-semibold text-center">TwinX</th>
               </tr>
             </thead>
-            <tbody className="text-sm">
+            <tbody className="text-base">
               {[
+                { label: "Price", plus: <span className="text-foreground font-semibold">$15</span>, twinX: <span className="text-foreground font-semibold">$25</span> },
                 { label: "Regular Matches", plus: <Tick />, twinX: <Tick /> },
                 { label: "Post-date Analytics", plus: <Tick />, twinX: <Tick /> },
-                { label: "Matching Analysis", plus: <span className="text-foreground/60 text-xs">Preview</span>, twinX: <Tick /> },
+                { label: "Matching Analysis", plus: <span className="text-foreground/60 text-sm">Preview</span>, twinX: <Tick /> },
                 { label: "Faster Match Cycles", plus: <Cross />, twinX: <Tick /> },
                 { label: "Planning Assistant", plus: <Cross />, twinX: <Tick /> },
                 { label: "Filter Matching", plus: <Cross />, twinX: <Tick /> },
               ].map((row) => (
                 <tr key={row.label} className="border-t border-foreground/10 align-top">
-                  <td className="p-3 text-foreground/80">{row.label}</td>
-                  <td className="p-3">{row.plus}</td>
-                  <td className="p-3">{row.twinX}</td>
+                  <td className="p-6 text-foreground/80 font-medium">{row.label}</td>
+                  <td className="p-6 text-center">{row.plus}</td>
+                  <td className="p-6 text-center">{row.twinX}</td>
                 </tr>
               ))}
             </tbody>
@@ -55,7 +56,7 @@ export default function PricingReveal() {
 
 function Tick() {
   return (
-    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-500/15 text-green-700" aria-label="Included">
+    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-green-500/15 text-green-700 text-lg" aria-label="Included">
       ✓
     </span>
   );
@@ -63,7 +64,7 @@ function Tick() {
 
 function Cross() {
   return (
-    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500/10 text-red-600" aria-label="Not included">
+    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-500/10 text-red-600 text-lg" aria-label="Not included">
       ✕
     </span>
   );
