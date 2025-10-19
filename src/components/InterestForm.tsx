@@ -47,9 +47,9 @@ export default function InterestForm() {
         </Button>
       </div>
       {status !== "idle" && message && (
-        <p className={`mt-3 text-sm ${status === "error" ? "text-red-300" : "text-lavender-light"}`}>{message}</p>
+        <p className={`mt-3 text-sm ${status === "error" ? "text-red-600" : "text-foreground/70"}`}>{message}</p>
       )}
-      <p className="mt-2 text-xs text-white/50">We respect your privacy. Unsubscribe anytime.</p>
+      <p className="mt-2 text-xs text-foreground/60">Limited beta: 50 early members only.</p>
     </form>
   );
 }

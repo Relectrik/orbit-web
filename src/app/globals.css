@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  --background: #ffffff;
+  --foreground: #000000;
 }
 
 /* Tailwind v4 inline theme tokens to mirror mobile app palette */
@@ -12,11 +12,11 @@
   --color-foreground: var(--foreground);
 
   /* brand palette inspired by the mobile app */
-  --color-space-deep: #000000;
-  --color-space-blue: #000000;
-  --color-lavender: #ffffff;
-  --color-lavender-light: #d0d0d0;
-  --color-star: #ffffff;
+  --color-space-deep: var(--background);
+  --color-space-blue: var(--background);
+  --color-lavender: var(--foreground);
+  --color-lavender-light: #4a4a4a;
+  --color-star: var(--foreground);
 
   /* fonts */
   --font-sans: Helvetica, Arial, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Liberation Sans", "Apple Color Emoji", "Segoe UI Emoji";
@@ -25,8 +25,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #000000;
-    --foreground: #ffffff;
+    --background: #ffffff;
+    --foreground: #000000;
   }
 }
 
@@ -38,7 +38,7 @@ body {
 
 /* utility for glass panels */
 .glass {
-  background: color-mix(in oklab, white 6%, transparent);
-  border: 1px solid color-mix(in oklab, white 14%, transparent);
+  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
   backdrop-filter: blur(10px);
 }
