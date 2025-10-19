@@ -24,7 +24,7 @@ export default function AboutPage() {
         </div>
         <div className="space-y-3">
           <h2 className="text-3xl md:text-4xl font-semibold">Find your soulmate.</h2>
-          <p className="text-xl text-foreground/70">Orbit is an AI-powered dating network where your personal AI chats with others to find real compatibility before you meet. When the chemistry&apos;s real, Orbit sets up the date for you — no ghosting, no wasted time.</p>
+          <p className="text-xl text-foreground/70">Orbit is an AI-powered dating app where your digital twin chats with other twins to find real compatibility before you meet. When the chemistry&apos;s real, Orbit sets up the date for you—no ghosting, no wasted time.</p>
         </div>
       </section>
 
@@ -35,26 +35,26 @@ export default function AboutPage() {
               <div className="flex items-start gap-4">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-foreground text-background text-lg font-semibold flex items-center justify-center">1</span>
                 <div>
-                  <h3 className="text-xl font-semibold">Train Your AI</h3>
-                  <p className="text-foreground/70 text-base">Teach your AI how you talk, what you value, and what kind of connection you&apos;re looking for.</p>
+                  <h3 className="text-xl font-semibold">Build Your Twin</h3>
+                  <p className="text-foreground/70 text-base">Luna, our AI assistant, helps you create your digital twin based on your interests, personality, and the person behind the profile.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-foreground text-background text-lg font-semibold flex items-center justify-center">2</span>
                 <div>
-                  <h3 className="text-xl font-semibold">AI-to-AI Conversations</h3>
-                  <p className="text-foreground/70 text-base">Your AI chats with others to gauge real compatibility — not just looks or bios.</p>
+                  <h3 className="text-xl font-semibold">Twin-to-Twin Conversations</h3>
+                  <p className="text-foreground/70 text-base">Your twin chats with other twins to gauge real compatibility — not just looks or bios.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-foreground text-background text-lg font-semibold flex items-center justify-center">3</span>
                 <div>
                   <h3 className="text-xl font-semibold">The Match Moment</h3>
-                  <p className="text-foreground/70 text-base">When two AIs hit a high compatibility score, Orbit texts you both to set up a date.</p>
+                  <p className="text-foreground/70 text-base">When two twins hit a high compatibility score, Orbit texts you both to set up a date.</p>
                 </div>
               </div>
             </div>
-            <p className="text-foreground/70 text-base italic">No pressure, no awkward intros — just authentic matches made effortless.</p>
+            <p className="text-foreground/70 text-base italic">No pressure, no awkward intros—just authentic matches made effortless.</p>
           </div>
           <div className="order-1 md:order-2 relative aspect-[2/3] rounded-3xl overflow-hidden bg-white">
             <Image src="/images/match%20screenshot.png" alt="Match preview screenshot" fill className="object-contain" sizes="(min-width: 768px) 50vw, 100vw" />
