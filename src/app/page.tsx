@@ -72,7 +72,7 @@ export default function AboutPage() {
 
         {/* Moon button at bottom */}
         <section className="flex flex-col items-center -mb-10">
-          <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">Choose your plan, find your match</h2>
+          <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-4">Choose your plan, find your match</h2>
           <div className="relative">
             {/* Pulsing aura */}
             <div className="absolute inset-0 w-20 h-20 rounded-full bg-foreground/20 animate-ping" />
