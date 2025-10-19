@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
 export default function InterestForm() {
+  const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
+  const [phone, setPhone] = React.useState("");
   const [status, setStatus] = React.useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = React.useState<string>("");
 
@@ -17,13 +19,15 @@ export default function InterestForm() {
       const res = await fetch("/api/interest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ name, email, phone }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Failed to submit");
       setStatus("success");
       setMessage("Surprise! Orbit isn't open for take-off just yet, but you're officially on the launch list 🚀");
+      setName("");
       setEmail("");
+      setPhone("");
     } catch (err: unknown) {
       const error = err as { message?: string } | Error;
       setStatus("error");
@@ -34,7 +38,15 @@ export default function InterestForm() {
   return (
     <form onSubmit={onSubmit} className="w-full max-w-md glass rounded-2xl p-8">
       {status !== "success" && (
-        <div className="flex items-center gap-2">
+        <div className="space-y-4">
+          <Input
+            type="text"
+            required
+            autoComplete="name"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <Input
             type="email"
             required
@@ -43,7 +55,15 @@ export default function InterestForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <Button type="submit" disabled={status === "loading"}>
+          <Input
+            type="tel"
+            required
+            autoComplete="tel"
+            placeholder="Enter your phone number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <Button type="submit" disabled={status === "loading"} className="w-full">
             {status === "loading" ? "Sending…" : "Join"}
           </Button>
         </div>
