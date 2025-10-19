@@ -35,7 +35,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} style={{ fontFamily: 'Helvetica, Arial, ui-sans-serif, system-ui' }}>
         <div className="min-h-dvh">
-          <main className="mx-auto max-w-5xl px-6 py-10">
+          <main className="mx-auto max-w-5xl px-6 py-24">
             <PageTransition>{children}</PageTransition>
           </main>
           <footer className="mx-auto max-w-5xl px-6 py-10 opacity-80 text-sm">

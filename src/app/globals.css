@@ -42,3 +42,9 @@ body {
   border: 1px solid color-mix(in oklab, var(--foreground) 14%, transparent);
   backdrop-filter: blur(10px);
 }
+
+/* custom slow pulse animation */
+@keyframes slowPulse {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}
