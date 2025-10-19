@@ -10,78 +10,9 @@ export default function AboutPage() {
       {/* Floating HERO full-width */}
       <section className="sticky top-0 z-30">
         <div className="mx-auto max-w-5xl px-6">
-          <div className="bg-white border border-foreground/10 shadow-sm rounded-2xl px-4 py-3 text-center relative">
+          <div className="bg-white border border-foreground/10 shadow-sm rounded-2xl px-4 py-3 text-center">
             <h1 className="text-5xl md:text-7xl font-black tracking-tight text-foreground">Orbit</h1>
             <p className="text-sm md:text-base text-foreground/80">Meet the right match, without all the small talk.</p>
-            {/* Moon button positioned on the right side of the hero - responsive */}
-            <div className="absolute top-1/2 right-2 md:right-4 transform -translate-y-1/2 hidden sm:block">
-              <div className="relative">
-                {/* Pulsing aura */}
-                <div className="absolute inset-0 w-16 h-16 md:w-20 md:h-20 rounded-full bg-foreground/20 animate-ping" />
-                <div 
-                  className="absolute inset-1 w-14 h-14 md:w-18 md:h-18 rounded-full bg-foreground/10" 
-                  style={{ 
-                    animation: 'slowPulse 6s ease-in-out infinite',
-                    animationDelay: '0s'
-                  }} 
-                />
-                <div 
-                  className="absolute inset-2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-foreground/5" 
-                  style={{ 
-                    animation: 'slowPulse 6s ease-in-out infinite',
-                    animationDelay: '2s'
-                  }} 
-                />
-                
-                {/* Moon button */}
-                <button
-                  onClick={() => {
-                    const modal = document.getElementById('orbit-modal');
-                    if (modal) modal.style.display = 'flex';
-                  }}
-                  className="relative w-16 h-16 md:w-20 md:h-20 rounded-full bg-foreground text-background hover:opacity-90 transition-all duration-300 flex items-center justify-center text-2xl md:text-3xl shadow-lg hover:scale-110"
-                  aria-label="Enter Orbit"
-                >
-                  🌙
-                </button>
-              </div>
-            </div>
-            
-            {/* Mobile moon button - positioned at bottom of hero */}
-            <div className="block sm:hidden mt-4">
-              <div className="flex justify-center">
-                <div className="relative">
-                  {/* Pulsing aura */}
-                  <div className="absolute inset-0 w-16 h-16 rounded-full bg-foreground/20 animate-ping" />
-                  <div 
-                    className="absolute inset-1 w-14 h-14 rounded-full bg-foreground/10" 
-                    style={{ 
-                      animation: 'slowPulse 6s ease-in-out infinite',
-                      animationDelay: '0s'
-                    }} 
-                  />
-                  <div 
-                    className="absolute inset-2 w-12 h-12 rounded-full bg-foreground/5" 
-                    style={{ 
-                      animation: 'slowPulse 6s ease-in-out infinite',
-                      animationDelay: '2s'
-                    }} 
-                  />
-                  
-                  {/* Moon button */}
-                  <button
-                    onClick={() => {
-                      const modal = document.getElementById('orbit-modal');
-                      if (modal) modal.style.display = 'flex';
-                    }}
-                    className="relative w-16 h-16 rounded-full bg-foreground text-background hover:opacity-90 transition-all duration-300 flex items-center justify-center text-2xl shadow-lg hover:scale-110"
-                    aria-label="Enter Orbit"
-                  >
-                    🌙
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -136,6 +67,40 @@ export default function AboutPage() {
             <h2 className="text-3xl md:text-4xl font-semibold">Pricing</h2>
             <p className="text-foreground/70">Transparent and fair. Learn what&apos;s included.</p>
             <PricingReveal />
+          </div>
+        </section>
+
+        {/* Moon button at bottom */}
+        <section className="flex justify-center -mb-10">
+          <div className="relative">
+            {/* Pulsing aura */}
+            <div className="absolute inset-0 w-20 h-20 rounded-full bg-foreground/20 animate-ping" />
+            <div 
+              className="absolute inset-1 w-18 h-18 rounded-full bg-foreground/10" 
+              style={{ 
+                animation: 'slowPulse 6s ease-in-out infinite',
+                animationDelay: '0s'
+              }} 
+            />
+            <div 
+              className="absolute inset-2 w-16 h-16 rounded-full bg-foreground/5" 
+              style={{ 
+                animation: 'slowPulse 6s ease-in-out infinite',
+                animationDelay: '2s'
+              }} 
+            />
+            
+            {/* Moon button */}
+            <button
+              onClick={() => {
+                const modal = document.getElementById('orbit-modal');
+                if (modal) modal.style.display = 'flex';
+              }}
+              className="relative w-20 h-20 rounded-full bg-foreground text-background hover:opacity-90 transition-all duration-300 flex items-center justify-center text-3xl shadow-lg hover:scale-110"
+              aria-label="Enter Orbit"
+            >
+              🌙
+            </button>
           </div>
         </section>
 
